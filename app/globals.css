@@ -1,26 +1,688 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
+  --background: #f7f5ef;
   --foreground: #171717;
+  --primary: #1f4d3a;
+  --secondary: #e8e3d6;
+  --white: #ffffff;
+  --muted: #6b6b6b;
+  --border: #dedbd2;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+* {
+  box-sizing: border-box;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+/* NAVBAR */
+
+.navbar {
+  width: 100%;
+  padding: 22px 6%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
+  background: var(--background);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.navLinks {
+  display: flex;
+  gap: 30px;
+}
+
+.navLinks a {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.navLinks a:hover {
+  color: var(--primary);
+}
+
+.postButton {
+  border: none;
+  background: var(--primary);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+/* HERO */
+
+.hero {
+  min-height: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 6%;
+  background:
+    linear-gradient(rgba(247, 245, 239, 0.88), rgba(247, 245, 239, 0.88)),
+    url("https://images.unsplash.com/photo-1564013799919-ab600027ffc6?auto=format&fit=crop&w=1800&q=80")
+      center/cover;
+}
+
+.heroContent {
+  width: 100%;
+  max-width: 1100px;
+  text-align: center;
+}
+
+.smallText {
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-size: clamp(48px, 7vw, 82px);
+  line-height: 0.98;
+  margin: 0;
+  letter-spacing: -4px;
+}
+
+.hero h1 span {
+  color: var(--primary);
+}
+
+.heroText {
+  max-width: 650px;
+  margin: 25px auto 35px;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1.7;
+}
+
+/* SEARCH */
+
+.searchBox {
+  max-width: 900px;
+  margin: 0 auto;
+  background: var(--white);
+  padding: 10px;
+  border-radius: 14px;
+  display: grid;
+  grid-template-columns: 1fr 180px 120px;
+  gap: 10px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+}
+
+.searchBox input,
+.searchBox select {
+  border: 1px solid var(--border);
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  outline: none;
+}
+
+.searchBox input:focus,
+.searchBox select:focus {
+  border-color: var(--primary);
+}
+
+.searchBox button {
+  border: none;
+  border-radius: 8px;
+  background: var(--primary);
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* HOUSES */
+
+.houses {
+  padding: 90px 6%;
+  max-width: 1300px;
+  margin: auto;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 40px;
+}
+
+.sectionHeader h2 {
+  margin: 0;
+  font-size: 42px;
+  letter-spacing: -2px;
+}
+
+.sectionHeader > p {
+  color: var(--muted);
+}
+
+.houseGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.houseCard {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.houseCard:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.houseCard img {
+  width: 100%;
+  height: 230px;
+  object-fit: cover;
+  display: block;
+}
+
+.houseInfo {
+  padding: 22px;
+}
+
+.houseTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tag {
+  display: inline-block;
+  background: #e4eee8;
+  color: var(--primary);
+  padding: 7px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.houseInfo h3 {
+  font-size: 21px;
+  margin: 18px 0 8px;
+}
+
+.location {
+  color: var(--muted);
+  margin: 0 0 20px;
+}
+
+.houseBottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid var(--border);
+}
+
+.houseBottom strong {
+  color: var(--primary);
+  font-size: 17px;
+}
+
+.houseBottom span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.detailsButton {
+  width: 100%;
+  margin-top: 20px;
+  padding: 13px;
+  border: 1px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.detailsButton:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* FEATURES */
+
+.features {
+  padding: 90px 6%;
+  background: var(--secondary);
+}
+
+.features > div:first-child {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.features h2 {
+  font-size: 45px;
+  margin-top: 0;
+  letter-spacing: -2px;
+}
+
+.featureGrid {
+  max-width: 1200px;
+  margin: 55px auto 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.featureGrid > div {
+  border-top: 2px solid var(--primary);
+  padding-top: 20px;
+}
+
+.featureGrid span {
+  color: var(--primary);
+  font-weight: 800;
+}
+
+.featureGrid h3 {
+  font-size: 22px;
+}
+
+.featureGrid p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+/* CONTACT */
+
+.contact {
+  padding: 100px 6%;
+  text-align: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+.contact h2 {
+  font-size: clamp(38px, 6vw, 65px);
+  letter-spacing: -3px;
+  margin: 10px 0 20px;
+}
+
+.contact p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.contact button {
+  margin-top: 25px;
+  padding: 15px 28px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* FOOTER */
+
+footer {
+  padding: 35px 6%;
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+  .navbar {
+    padding: 18px 5%;
+  }
+
+  .navLinks {
+    display: none;
+  }
+
+  .hero {
+    min-height: 650px;
+    padding: 70px 5%;
+  }
+
+  .hero h1 {
+    font-size: 52px;
+    letter-spacing: -3px;
+  }
+
+  .searchBox {
+    grid-template-columns: 1fr;
+  }
+
+  .houseGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .sectionHeader {
+    display: block;
+  }
+
+  .sectionHeader h2 {
+    font-size: 35px;
+    margin-bottom: 15px;
+  }
+
+  .featureGrid {
+    grid-template-columns: 1fr;
+    gap: 45px;
+  }
+
+  .features h2 {
+    font-size: 38px;
+  }
+
+  footer {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+/* PROPERTY DETAILS PAGE */
+
+.detailsPage {
+  min-height: 100vh;
+  background: var(--background);
+}
+
+.detailsContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 6% 100px;
+}
+
+.backLink {
+  display: inline-block;
+  margin-bottom: 35px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.backLink:hover {
+  color: var(--primary);
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 55px;
+  align-items: start;
+}
+
+.detailsImage {
+  width: 100%;
+  height: 600px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+.detailsImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.detailsContent {
+  padding-top: 10px;
+}
+
+.detailsContent h1 {
+  font-size: clamp(40px, 5vw, 64px);
+  line-height: 1;
+  letter-spacing: -3px;
+  margin: 20px 0 15px;
+}
+
+.detailsLocation {
+  color: var(--muted);
+  font-size: 17px;
+  margin-bottom: 30px;
+}
+
+.detailsPrice {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--primary);
+  margin-bottom: 30px;
+}
+
+.detailsInfo {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 22px 0;
+  margin-bottom: 35px;
+}
+
+.detailsInfo div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.detailsInfo strong {
+  font-size: 16px;
+}
+
+.detailsInfo span {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.detailsContent h2 {
+  font-size: 25px;
+  margin-bottom: 12px;
+}
+
+.detailsDescription {
+  color: var(--muted);
+  line-height: 1.8;
+  font-size: 16px;
+  margin-bottom: 35px;
+}
+
+.detailsActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.contactButton,
+.browseButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 22px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.contactButton {
+  background: var(--primary);
+  color: white;
+}
+
+.contactButton:hover {
+  opacity: 0.9;
+}
+
+.browseButton {
+  border: 1px solid var(--border);
+  background: white;
+}
+
+.browseButton:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* DETAILS MOBILE */
+
+@media (max-width: 800px) {
+  .detailsContainer {
+    padding: 40px 5% 70px;
+  }
+
+  .detailsGrid {
+    grid-template-columns: 1fr;
+    gap: 35px;
+  }
+
+  .detailsImage {
+    height: 350px;
+  }
+
+  .detailsContent h1 {
+    font-size: 42px;
+  }
+
+  .detailsInfo {
+    gap: 15px;
+  }
+
+  .detailsActions {
+    flex-direction: column;
+  }
+
+  .contactButton,
+  .browseButton {
+    width: 100%;
+  }
+}
+/* POST HOUSE PAGE */
+
+.postPage {
+  min-height: 100vh;
+  background: #f7f5ef;
+}
+
+.postContainer {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 80px 24px;
+}
+
+.postContainer h1 {
+  font-size: 56px;
+  line-height: 1;
+  margin: 10px 0 18px;
+}
+
+.postIntro {
+  color: #666;
+  font-size: 18px;
+  margin-bottom: 45px;
+}
+
+.houseForm {
+  display: grid;
+  gap: 24px;
+  background: white;
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.houseForm label {
+  display: grid;
+  gap: 9px;
+  font-weight: 600;
+}
+
+.houseForm input,
+.houseForm select,
+.houseForm textarea {
+  width: 100%;
+  padding: 15px 16px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  font: inherit;
+  background: #fff;
+  color: #222;
+}
+
+.houseForm textarea {
+  resize: vertical;
+}
+
+.houseForm input:focus,
+.houseForm select:focus,
+.houseForm textarea:focus {
+  outline: none;
+  border-color: #245b5a;
+}
+
+.houseForm .postButton {
+  border: none;
+  cursor: pointer;
+  padding: 16px 22px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.successMessage {
+  background: white;
+  padding: 45px;
+  border-radius: 18px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+}
+
+.successMessage h2 {
+  margin-bottom: 12px;
+}
+
+.successMessage p {
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.browseButton {
+  display: inline-block;
+  text-decoration: none;
 }

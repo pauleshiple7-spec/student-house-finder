@@ -1,69 +1,205 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+const houses = [
+  {
+    id: 1,
+    title: "Modern Self-Contain",
+    location: "Yaba, Lagos",
+    price: "₦650,000/year",
+    type: "Self Contain",
+    bedrooms: 1,
+    image:
+      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
+  },
+  {
+    id: 2,
+    title: "2 Bedroom Student Apartment",
+    location: "Surulere, Lagos",
+    price: "₦900,000/year",
+    type: "2 Bedroom",
+    bedrooms: 2,
+    image:
+      "https://images.unsplash.com/photo-1560185008-b033106af5c3",
+  },
+  {
+    id: 3,
+    title: "Affordable Student Room",
+    location: "Akoka, Lagos",
+    price: "₦450,000/year",
+    type: "Room",
+    bedrooms: 1,
+    image:
+      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
+  },
+];
 
 export default function Home() {
+  const [search, setSearch] = useState("");
+  const [type, setType] = useState("All");
+
+  const filteredHouses = houses.filter((house) => {
+    const matchesSearch =
+      house.title.toLowerCase().includes(search.toLowerCase()) ||
+      house.location.toLowerCase().includes(search.toLowerCase());
+
+    const matchesType = type === "All" || house.type === type;
+
+    return matchesSearch && matchesType;
+  });
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
+    <main>
+      <nav className="navbar">
+        <div className="logo">🏠 StudentStay</div>
+
+        <div className="navLinks">
+          <a href="#home">Home</a>
+          <a href="#houses">Find Houses</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <Link href="/post" className="postButton">
+  Post a House
+</Link>
+
+        </nav>
+
+      <section className="hero" id="home">
+        <div className="heroContent">
+          <p className="smallText">STUDENT HOUSING MADE EASY</p>
+
+          <h1>
+            Find a place
+            <br />
+            <span>you can call home.</span>
           </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+
+          <p className="heroText">
+            Discover affordable student accommodation near your school,
+            campus or preferred location.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+
+          <div className="searchBox">
+            <input
+              type="text"
+              placeholder="Search location or property..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+            >
+              <option value="All">All Types</option>
+              <option value="Room">Room</option>
+              <option value="Self Contain">Self Contain</option>
+              <option value="2 Bedroom">2 Bedroom</option>
+            </select>
+
+            <button>Search</button>
+          </div>
         </div>
-      </main>
-    </div>
+      </section>
+
+      <section className="houses" id="houses">
+        <div className="sectionHeader">
+          <div>
+            <p className="smallText">AVAILABLE PROPERTIES</p>
+            <h2>Find your next home.</h2>
+          </div>
+
+          <p>{filteredHouses.length} properties found</p>
+        </div>
+
+        <div className="houseGrid">
+          {filteredHouses.map((house) => (
+            <article className="houseCard" key={house.id}>
+              <img
+                src={`${house.image}?auto=format&fit=crop&w=900&q=80`}
+                alt={house.title}
+              />
+
+              <div className="houseInfo">
+                <div className="houseTop">
+              <span className="tag">{house.type}</span>
+                  <span>♡</span>
+                </div>
+
+                <h3>{house.title}</h3>
+
+                <p className="location">📍 {house.location}</p>
+
+                <div className="houseBottom">
+                  <strong>{house.price}</strong>
+                  <span>{house.bedrooms} Bedroom</span>
+                </div>
+
+                <Link
+  href={`/houses/${house.id}`}
+  className="detailsButton"
+>
+  View Details →
+</Link>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="features" id="about">
+        <div>
+          <p className="smallText">WHY STUDENTSTAY?</p>
+          <h2>Housing should be simple.</h2>
+        </div>
+
+        <div className="featureGrid">
+          <div>
+            <span>01</span>
+            <h3>Search easily</h3>
+            <p>
+              Find properties by location, price and property type.
+            </p>
+          </div>
+
+          <div>
+            <span>02</span>
+            <h3>Affordable options</h3>
+            <p>
+              Discover accommodation designed around student budgets.
+            </p>
+          </div>
+
+          <div>
+            <span>03</span>
+            <h3>Save time</h3>
+            <p>
+              Compare different properties without visiting every location.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="contact" id="contact">
+        <p className="smallText">GET STARTED</p>
+
+        <h2>Ready to find your next home?</h2>
+
+        <p>
+          StudentStay makes it easier for students to discover suitable
+          accommodation.
+        </p>
+
+        <button>Explore Houses →</button>
+      </section>
+
+      <footer>
+        <div>🏠 StudentStay</div>
+        <p>Student housing made simple.</p>
+        <p>© {new Date().getFullYear()} StudentStay</p>
+      </footer>
+    </main>
   );
 }
