@@ -1,54 +1,5 @@
 import Link from "next/link";
-
-type House = {
-  id: number;
-  title: string;
-  location: string;
-  price: string;
-  type: string;
-  bedrooms: number;
-  image: string;
-  description: string;
-};
-
-const houses: House[] = [
-  {
-    id: 1,
-    title: "Modern Self-Contain",
-    location: "Yaba, Lagos",
-    price: "₦650,000/year",
-    type: "Self Contain",
-    bedrooms: 1,
-    image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-    description:
-      "A modern and comfortable self-contained apartment suitable for students looking for affordable accommodation in Yaba.",
-  },
-  {
-    id: 2,
-    title: "2 Bedroom Student Apartment",
-    location: "Surulere, Lagos",
-    price: "₦900,000/year",
-    type: "2 Bedroom",
-    bedrooms: 2,
-    image:
-      "https://images.unsplash.com/photo-1560185008-b033106af5c3",
-    description:
-      "A spacious two-bedroom apartment suitable for students who want to share accommodation.",
-  },
-  {
-    id: 3,
-    title: "Affordable Student Room",
-    location: "Akoka, Lagos",
-    price: "₦450,000/year",
-    type: "Room",
-    bedrooms: 1,
-    image:
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
-    description:
-      "An affordable student room located close to schools and other important facilities.",
-  },
-];
+import { createClient } from "@/app/utils/supabase/server";
 
 export default async function HouseDetails({
   params,
@@ -57,9 +8,16 @@ export default async function HouseDetails({
 }) {
   const { id } = await params;
 
-  const house = houses.find((item) => item.id === Number(id));
+  const supabase = await createClient();
 
-  if (!house) {
+  const { data: house, error } = await supabase
+    .from("properties")
+    .select("*")
+    .eq("id", id)
+    .eq("status", "approved")
+    .single();
+
+  if (error || !house) {
     return (
       <main className="detailsPage">
         <h1>House not found</h1>
@@ -70,7 +28,20 @@ export default async function HouseDetails({
     );
   }
 
+  const image =
+    house.image_urls && house.image_urls.length > 0
+      ? house.image_urls[0]
+      : "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267";
+
+  const whatsappNumber = house.whatsapp || house.phone || "";
+
   const whatsappMessage = `Hello, I'm interested in the ${house.title} in ${house.location}. Is it still available?`;
+
+  const whatsappLink = whatsappNumber
+    ? `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(
+        whatsappMessage
+      )}`
+    : "#";
 
   return (
     <main className="detailsPage">
@@ -84,7 +55,9 @@ export default async function HouseDetails({
           <Link href="/#contact">Contact</Link>
         </div>
 
-        <button className="postButton">Post a House</button>
+        <Link href="/post" className="postButton">
+          Post a House
+        </Link>
       </nav>
 
       <section className="detailsContainer">
@@ -94,20 +67,17 @@ export default async function HouseDetails({
 
         <div className="detailsCard">
           <div className="detailsImage">
-            <img
-              src={`${house.image}?auto=format&fit=crop&w=1200&q=80`}
-              alt={house.title}
-            />
+            <img src={image} alt={house.title} />
           </div>
 
           <div className="detailsInfo">
-            <span className="tag">{house.type}</span>
+            <span className="tag">{house.property_type}</span>
 
             <h1>{house.title}</h1>
 
             <p className="location">📍 {house.location}</p>
 
-            <h2>{house.price}</h2>
+            <h2>₦{Number(house.price).toLocaleString()} / year</h2>
 
             <div className="propertyFacts">
               <div>
@@ -116,27 +86,48 @@ export default async function HouseDetails({
               </div>
 
               <div>
-                <strong>{house.type}</strong>
+                <strong>{house.property_type}</strong>
                 <span>Property Type</span>
               </div>
             </div>
 
             <div className="description">
               <h3>About this property</h3>
-              <p>{house.description}</p>
+
+              <p>
+                {house.description ||
+                  "Contact the agent for more information about this property."}
+              </p>
             </div>
 
             <div className="detailsActions">
-              <a
-                href={`https://wa.me/2348134783737?text=${encodeURIComponent(
-                  whatsappMessage
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-                className="contactButton"
-              >
-                Contact Landlord on WhatsApp
-              </a>
+              {house.phone && (
+                <>
+                  <p>
+                    <strong>Agent Phone:</strong> {house.phone}
+                  </p>
+
+                  <a
+                    href={`tel:${house.phone}`}
+                    className="contactButton"
+                  >
+                    📞 Call Agent
+                  </a>
+                </>
+              )}
+
+              {whatsappNumber ? (
+                <a
+                  href={whatsappLink}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="contactButton"
+                >
+                  💬 Contact Agent on WhatsApp
+                </a>
+              ) : (
+                <p>No WhatsApp number provided.</p>
+              )}
 
               <Link href="/" className="browseButton">
                 Browse More Houses
@@ -148,7 +139,9 @@ export default async function HouseDetails({
 
       <footer>
         <div>🏠 StudentStay</div>
+
         <p>Student housing made simple.</p>
+
         <p>© {new Date().getFullYear()} StudentStay</p>
       </footer>
     </main>

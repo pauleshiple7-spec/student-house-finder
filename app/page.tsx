@@ -1,54 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-const houses = [
-  {
-    id: 1,
-    title: "Modern Self-Contain",
-    location: "Yaba, Lagos",
-    price: "₦650,000/year",
-    type: "Self Contain",
-    bedrooms: 1,
-    image:
-      "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
-  },
-  {
-    id: 2,
-    title: "2 Bedroom Student Apartment",
-    location: "Surulere, Lagos",
-    price: "₦900,000/year",
-    type: "2 Bedroom",
-    bedrooms: 2,
-    image:
-      "https://images.unsplash.com/photo-1560185008-b033106af5c3",
-  },
-  {
-    id: 3,
-    title: "Affordable Student Room",
-    location: "Akoka, Lagos",
-    price: "₦450,000/year",
-    type: "Room",
-    bedrooms: 1,
-    image:
-      "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85",
-  },
-];
+import { createClient } from "./utils/supabase/client";
+const supabase = createClient();
+
+type House = {
+  id: string;
+  title: string;
+  location: string;
+  price: number;
+  type: string;
+  bedrooms: number;
+  image: string;
+};
 
 export default function Home() {
   const [search, setSearch] = useState("");
-  const [type, setType] = useState("All");
+const [type, setType] = useState("All");
+const [houses, setHouses] = useState<House[]>([]);
 
-  const filteredHouses = houses.filter((house) => {
-    const matchesSearch =
-      house.title.toLowerCase().includes(search.toLowerCase()) ||
-      house.location.toLowerCase().includes(search.toLowerCase());
+useEffect(() => {
+  async function loadHouses() {
+    const { data, error } = await supabase
+      .from("properties")
+      .select("*")
+      .eq("status", "approved")
+      .order("created_at", { ascending: false });
+      console.log("HOUSES DATA:", data, "ERROR:", error);
 
-    const matchesType = type === "All" || house.type === type;
+    if (error) {
+      console.error("Error loading houses:", error);
+      return;
+    }
 
-    return matchesSearch && matchesType;
-  });
+    const formattedHouses: House[] = (data || []).map((house) => ({
+      id: house.id,
+      title: house.title,
+      location: house.location,
+      price: Number(house.price),
+      type: house.property_type,
+      bedrooms: house.bedrooms,
+      image: house.image_urls?.[0] || "",
+    }));
 
+    setHouses(formattedHouses);
+  }
+
+  loadHouses();
+}, []);
+
+const filteredHouses = houses.filter((house) => {
+  const matchesSearch =
+    house.title.toLowerCase().includes(search.toLowerCase()) ||
+    house.location.toLowerCase().includes(search.toLowerCase());
+
+  const matchesType = type === "All" || house.type === type;
+
+  return matchesSearch && matchesType;
+});
   return (
     <main>
       <nav className="navbar">

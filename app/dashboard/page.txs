@@ -1,0 +1,25 @@
+export default function DashboardPage() {
+  return (
+    <main
+      style={{
+        minHeight: "100vh",
+        padding: "40px 20px",
+        fontFamily: "Arial, sans-serif",
+      }}
+    >
+      <h1>StudentStay Dashboard</h1>
+
+      <p style={{ marginTop: "15px" }}>
+        Dashboard is working correctly.
+      </p>
+
+      <div style={{ marginTop: "30px" }}>
+        <h2>Welcome to StudentStay</h2>
+        <p>
+          This is your agent dashboard. You will be able to manage your
+          properties here.
+        </p>
+      </div>
+    </main>
+  );
+}
